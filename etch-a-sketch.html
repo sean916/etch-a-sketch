@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Etch-A-Sketch</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id='topPage'></div>
+    <div id='container'></div>
+
+    <script>
+      let currentColorPercent
+// Fill function for the cells.
+      function fillBlack(e) {
+          let target = event.target;
+          let currentColor = parseInt(target.dataset.percent);
+          if (isNaN(currentColor)) currentColor = 100;
+          if (currentColor >=10) {
+            currentColor -= 10;
+            target.dataset.percent = currentColor;
+          }
+            let rgbCode = `rgb(${currentColor}%,${currentColor}%,${currentColor}%)`;
+            if (target !== container) {
+            target.style['background'] = rgbCode;
+            console.log(rgbCode);
+          };
+          
+};
+    
+         
+//Allows user to clear and resize the grid with a prompt
+function resetGrid(e) {
+  const cells = document.querySelectorAll('.cell');
+  cells.forEach(cell => cell.remove());
+
+  let cellLength = prompt('How many squares per side would you like for the new grid?', 'Enter a number that is 2 or more');
+    if (cellLength == NaN || cellLength < 1) {
+      resetGrid(e);
+    } else {
+        totalCells = cellLength * cellLength;
+    };
+// Create the correct number of divs.
+  for (let i = 0; i < totalCells; i++) {
+    const container = document.querySelector('#container');
+    const cell = document.createElement('div');
+    cell.classList.add('cell'); 
+    cell.addEventListener('mouseover', fillBlack);
+    container.appendChild(cell);
+    };
+// Set the divs in a grid.
+    let rowWidth = (960 / cellLength);
+    let pixelSize = (rowWidth + "px");
+    document.documentElement.style.setProperty("--cellSize", pixelSize);
+
+    document.documentElement.style.setProperty("--rowNum", cellLength);
+    document.documentElement.style.setProperty("--colNum", cellLength);            
+        };
+
+// Connect styles and html variables
+      let htmlStyles = window.getComputedStyle(document.querySelector("html"));
+      let rowNum = parseInt(htmlStyles.getPropertyValue("--rowNum"));
+      let colNum = parseInt(htmlStyles.getPropertyValue("--colNum"));
+  
+// Default grid on page load.
+      let cellLength = 16;
+      let totalCells = cellLength * cellLength;
+// Create correct number of divs.
+      for (let i = 0; i < totalCells; i++) {
+        const container = document.querySelector('#container');
+        const cell = document.createElement('div');
+        cell.classList.add('cell'); 
+          container.appendChild(cell);
+      };
+
+// Set the size of the cells so that the page is always 960x960px
+      let rowWidth = (960 / cellLength);
+    let pixelSize = (rowWidth + "px");
+    document.documentElement.style.setProperty("--cellSize", pixelSize);
+
+// Set the size of the grid.
+        document.documentElement.style.setProperty("--rowNum", cellLength);
+        document.documentElement.style.setProperty("--colNum", cellLength);
+
+// Create the reset button at the top of the page.
+        const topPage = document.querySelector('#topPage');
+        const resetButton = document.createElement('button');
+        resetButton.setAttribute("id", "resetButton");
+        resetButton.innerHTML += "Reset & Resize";
+        topPage.appendChild(resetButton);
+
+
+// Add the event listener to all cells.
+      const cells = document.querySelectorAll('.cell');
+      cells.forEach(cell => cell.addEventListener('mouseover', fillBlack));
+
+     // Add function to the reset button.
+      document.getElementById("resetButton").addEventListener('click', resetGrid);//resetGrid);
+
+    </script>
+</body>
+
+</html>
